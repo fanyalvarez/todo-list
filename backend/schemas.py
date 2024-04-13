@@ -23,6 +23,7 @@ class Notes(NotesBase):
 
 
 class UserBase(BaseModel):
+    id: int | None = None
     email: EmailStr
     nickname: str
     full_name: str

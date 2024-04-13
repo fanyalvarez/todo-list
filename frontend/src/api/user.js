@@ -1,4 +1,10 @@
 import axios from "axios";
 
-export const registerRequest = async (user) => axios.post('https://todonotes.onrender.com/create/user', user)
-export const loginRequest = async (user) => axios.post('https://todonotes.onrender.com/token', user)
+const API_URL = "http://localhost:8000";
+
+export const registerRequest = async (user) =>
+  axios.post(API_URL + "/create/user", user);
+
+export const loginRequest = async (user) =>
+  axios.post(API_URL + "/token", user);
+

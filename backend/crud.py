@@ -1,14 +1,17 @@
 from datetime import timedelta, datetime, timezone
 from typing import Annotated
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, status, Header
 from sqlmodel import Session
-from fastapi.security import OAuth2PasswordBearer
+from fastapi.security import (
+    HTTPAuthorizationCredentials,
+    HTTPBearer,
+    OAuth2PasswordBearer,
+)
 from passlib.context import CryptContext
 from jose import JWTError, jwt
 from db import SECRET_KEY, ALGORITHM
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
-
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 
@@ -27,22 +30,26 @@ def create_access_token(email: str, user_id: int, expires_delta: timedelta):
     return jwt.encode(enconde, SECRET_KEY, algorithm=ALGORITHM)
 
 
-#async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-async def get_current_user(token):
+bearer_scheme = HTTPBearer()
+
+
+async def get_current_user(
+    token: HTTPAuthorizationCredentials = Depends(bearer_scheme),
+):
     try:
-        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        email: str = payload.get("sub")
-        user_id: int = payload.get("id")
+        payload = jwt.decode(token.credentials, SECRET_KEY, algorithms=[ALGORITHM])
+        email: str = payload.get("sub", "")
+        user_id: int = payload.get("id", "")
         if email is None or user_id is None:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED, detail="User invalidated"
             )
 
-        return {"email": email, "id": user_id}
+        return user_id
     except JWTError:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Could not validate user"
         )
 
 
-user_dependency = Annotated[Session, Depends(get_current_user)]
+user_dependency = Annotated[int, Depends(get_current_user)]

@@ -1,12 +1,23 @@
 import axios from "axios";
 
-export const getTasksRequest = async () => axios.get("https://todonotes.onrender.com/read/note", {
-    headers: {
-        "authorization":`Bearer ${localStorage.getItem("token")}`
-    }
-});
+const API_URL = "http://localhost:8000";
 
-export const getTaskRequest = async (note_id) => axios.get(`https://todonotes.onrender.com/note/${note_id}`);
-export const updateTaskRequest = async (note_id, task) => axios.put(`https://todonotes.onrender.com/note/update/${note_id}`, task);
-export const deleteTaskRequest = async (id) => axios.delete(`https://todonotes.onrender.com/delete/note/${id}`);
-export const createTaskRequest = async (task, user_id) => axios.post(`https://todonotes.onrender.com/users/${user_id}/notes/`, task);
+export const getTasksRequest = async () =>
+  axios.get(`${API_URL}/read/note`, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+
+export const getTaskRequest = async (note_id) =>
+  axios.get(`${API_URL}/note/${note_id}`);
+export const updateTaskRequest = async (note_id, task) =>
+  axios.put(`${API_URL}/note/update/${note_id}`, task);
+export const deleteTaskRequest = async (id) =>
+  axios.delete(`${API_URL}/delete/note/${id}`);
+export const createTaskRequest = async (task) =>
+  axios.post(`${API_URL}/users/notes/`, task, {
+    headers: {
+      authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });

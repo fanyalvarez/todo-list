@@ -18,15 +18,14 @@ SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base = declarative_base()
 
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
+# def get_db():
+#     db = SessionLocal()
+#     try:
+#         yield db
+#     finally:
+#         db.close()
+#
 
 # Others access
-SECRET_KEY = str = os.getenv("SECRET_KEY")
-ALGORITHM = str = os.getenv("ALGORITHM")
+SECRET_KEY = os.getenv("SECRET_KEY") or "valor defecto"
+ALGORITHM = str = os.getenv("ALGORITHM") or "valor defecto"
