@@ -11,6 +11,7 @@ export const getTasksRequest = async () =>
 
 export const getTaskRequest = async (note_id) =>
   axios.get(`${API_URL}/note/${note_id}`);
+
 export const updateTaskRequest = async (note_id, task) =>
   axios.put(`${API_URL}/note/update/${note_id}`, task);
 export const deleteTaskRequest = async (id) =>
